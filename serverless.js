@@ -5,7 +5,8 @@ const { Component } = require('@serverless/core')
 
 const defaults = {
   kubeConfigPath: path.join(process.env.HOME, '.kube', 'config'),
-  name: 'default'
+  name: 'default',
+  labels: null
 }
 
 class KubernetesNamespace extends Component {
@@ -53,8 +54,8 @@ class KubernetesNamespace extends Component {
     return kc
   }
 
-  async createNamespace(k8s, { name }) {
-    return k8s.createNamespace({ metadata: { name } })
+  async createNamespace(k8s, { name, labels }) {
+    return k8s.createNamespace({ metadata: { name, labels } })
   }
 
   async readNamespace(k8s, { name }) {

@@ -37,6 +37,9 @@ myKubernetesNamespace:
   inputs:
     kubeConfigPath: ../kubeconfig # default is `~/.kube/config`
     name: 'default' # default is `'default'`
+    labels: # default is `null`
+      foo: bar
+      baz: qux
 ```
 
 ### 4. Deploy
