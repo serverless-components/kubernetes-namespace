@@ -31,15 +31,18 @@ Make sure that you have generated your [`Kubeconfig` file](https://rancher.com/d
 
 ```yml
 # serverless.yml
+org: acme
+app: todo
+name: todo-kubernetes-namespace
 
-myKubernetesNamespace:
-  component: '@serverless/kubernetes-namespace'
-  inputs:
-    kubeConfigPath: ../kubeconfig # default is `~/.kube/config`
-    name: 'default' # default is `'default'`
-    labels: # default is `null`
-      foo: bar
-      baz: qux
+component: kubernetes-namespace@dev
+
+inputs:
+  kubeConfigPath: ../kubeconfig # default is `~/.kube/config`
+  name: 'default' # default is `'default'`
+  labels: # default is `null`
+    foo: bar
+    baz: qux
 ```
 
 ### 4. Deploy

@@ -1,0 +1,8 @@
+name: kubernetes-namespace
+version: 0.1.0
+author: pmuens
+org: pmuens
+keywords: kubernetes, serverless
+repo: https://github.com/serverless-components/kubernetes-namespace
+license: Apache-2.0
+main: ./src

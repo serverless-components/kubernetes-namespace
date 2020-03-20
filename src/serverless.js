@@ -10,7 +10,7 @@ const defaults = {
 }
 
 class KubernetesNamespace extends Component {
-  async default(inputs = {}) {
+  async deploy(inputs = {}) {
     const config = mergeDeepRight(defaults, inputs)
 
     const k8sCore = this.getKubernetesClient(config.kubeConfigPath, kubernetes.CoreV1Api)
@@ -27,7 +27,6 @@ class KubernetesNamespace extends Component {
     }
 
     this.state = config
-    await this.save()
     return this.state
   }
 
@@ -42,7 +41,6 @@ class KubernetesNamespace extends Component {
     await this.deleteNamespace(k8sCore, config)
 
     this.state = {}
-    await this.save()
     return {}
   }
 
