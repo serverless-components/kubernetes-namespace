@@ -1,19 +1,19 @@
-const path = require('path')
-const { isEmpty, mergeDeepRight } = require('ramda')
 const kubernetes = require('@kubernetes/client-node')
 const { Component } = require('@serverless/core')
 
 const defaults = {
-  kubeConfigPath: path.join(process.env.HOME, '.kube', 'config'),
   name: 'default',
   labels: null
 }
 
 class KubernetesNamespace extends Component {
   async deploy(inputs = {}) {
-    const config = mergeDeepRight(defaults, inputs)
+    const config = {
+      ...defaults,
+      ...inputs
+    }
 
-    const k8sCore = this.getKubernetesClient(config.kubeConfigPath, kubernetes.CoreV1Api)
+    const k8sCore = this.getKubernetesClient(kubernetes.CoreV1Api)
 
     let namespaceExists = true
     try {
@@ -31,12 +31,13 @@ class KubernetesNamespace extends Component {
   }
 
   async remove(inputs = {}) {
-    let config = mergeDeepRight(defaults, inputs)
-    if (isEmpty(config)) {
-      config = this.state
+    const config = {
+      ...defaults,
+      ...inputs,
+      ...this.state
     }
 
-    const k8sCore = this.getKubernetesClient(config.kubeConfigPath, kubernetes.CoreV1Api)
+    const k8sCore = this.getKubernetesClient(kubernetes.CoreV1Api)
 
     await this.deleteNamespace(k8sCore, config)
 
@@ -45,11 +46,30 @@ class KubernetesNamespace extends Component {
   }
 
   // "private" methods
-  getKubernetesClient(configPath, type) {
-    let kc = new kubernetes.KubeConfig()
-    kc.loadFromFile(configPath)
-    kc = kc.makeApiClient(type)
-    return kc
+  getKubernetesClient(type) {
+    const { endpoint, port } = this.credentials.kubernetes
+    const token = this.credentials.kubernetes.serviceAccountToken
+    const skipTLSVerify = this.credentials.kubernetes.skipTlsVerify ? true : false
+    const kc = new kubernetes.KubeConfig()
+    kc.loadFromOptions({
+      clusters: [
+        {
+          name: 'cluster',
+          skipTLSVerify,
+          server: `${endpoint}:${port}`
+        }
+      ],
+      users: [{ name: 'user', token }],
+      contexts: [
+        {
+          name: 'context',
+          user: 'user',
+          cluster: 'cluster'
+        }
+      ],
+      currentContext: 'context'
+    })
+    return kc.makeApiClient(type)
   }
 
   async createNamespace(k8s, { name, labels }) {

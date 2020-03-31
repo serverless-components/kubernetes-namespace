@@ -1,0 +1,16 @@
+{
+  "name": "@serverless/kubernetes-namespace",
+  "version": "0.2.0",
+  "main": "./serverless.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Serverless, Inc.",
+  "license": "Apache",
+  "dependencies": {
+    "@kubernetes/client-node": "^0.11.1"
+  }
+}
