@@ -49,7 +49,7 @@ class KubernetesNamespace extends Component {
   getKubernetesClient(type) {
     const { endpoint, port } = this.credentials.kubernetes
     const token = this.credentials.kubernetes.serviceAccountToken
-    const skipTLSVerify = this.credentials.kubernetes.skipTlsVerify ? true : false
+    const skipTLSVerify = this.credentials.kubernetes.skipTlsVerify == 'true'
     const kc = new kubernetes.KubeConfig()
     kc.loadFromOptions({
       clusters: [
